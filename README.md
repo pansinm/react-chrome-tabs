@@ -2,7 +2,7 @@
 
 ![](./react-chrome-tabs.gif)
 
-[codesandbox](https://codesandbox.io/embed/eager-galois-hq8uxb?fontsize=14&hidenavigation=1&theme=dark)
+[codesandbox]()
 
 ## Installation
 
@@ -44,6 +44,8 @@ function App() {
   const [tabs, setTabs] = useState<TabProperties[]>([
     { id: "abc", favicon: fb, title: "测试", active: true },
   ]);
+  
+  const [draggable, setDraggable] = useState(true);
 
   const addTab = () => {
     id++;
@@ -80,6 +82,7 @@ function App() {
       <Tabs
         darkMode={false}
         onTabClose={close}
+        draggable={draggable}
         onTabReorder={reorder}
         onTabActive={active}
         tabs={tabs}
@@ -100,15 +103,16 @@ More Examples see
 
 ## Component Props
 
-| name          | type          | description                     |
-| ------------- | ------------- | ------------------------------- |
-| darkMode      | boolean       | dark mode                       |
-| className     | string        | class name for tabs container   |
-| tabs          | TabProperties | tabs to render                  |
-| onTabActive   | Function      | when tab active                 |
-| onTabClose    | Function      | when tab close                  |
-| onTabReorder  | Function      | when tab drag to reorder        |
-| onContextMenu | Function      | when trigger context menu event |
+| name          | type          | description                                                            |
+| ------------- | ------------- | ---------------------------------------------------------------------- |
+| darkMode      | boolean       | Enables or disables dark mode.                                         |
+| className     | string        | Custom class name for the tabs container.                              |
+| tabs          | TabProperties | Array of tab data to be rendered.                                      |
+| draggable     | boolean       | Determines whether tabs can be dragged for reordering，default true.   |  |
+| onTabActive   | Function      | Callback function triggered when a tab becomes active.                 |
+| onTabClose    | Function      | Callback function triggered when a tab is closed.                      |
+| onTabReorder  | Function      | Callback function triggered when tabs are reordered via drag-and-drop. |
+| onContextMenu | Function      | Callback function triggered when the context menu event is invoked.    |
 
 ## TabProperties
 ```ts

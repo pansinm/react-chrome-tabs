@@ -11,11 +11,13 @@ export type TabsProps = Listeners & {
   className?: string;
   darkMode?: boolean;
   pinnedRight?: React.ReactNode;
+  draggable?: boolean;
 };
 
 export function Tabs({
   tabs,
   className,
+  draggable,
   darkMode,
   onTabActive: onTabActive,
   onTabClose: onTabClose,
@@ -60,13 +62,16 @@ export function Tabs({
     removeTab,
     updateTab,
     updateTabByIndex,
-  } = useChromeTabs({
-    onTabClose: onTabClose,
-    onTabActive: onTabActive,
-    onContextMenu,
-    onDragEnd: handleDragEnd,
-    onTabReorder: handleTabReorder,
-  });
+  } = useChromeTabs(
+    {
+      onTabClose: onTabClose,
+      onTabActive: onTabActive,
+      onContextMenu,
+      onDragEnd: handleDragEnd,
+      onTabReorder: handleTabReorder,
+    },
+    { draggable }
+  );
 
   useEffect(() => {
     const beforeTabs = previousTabs || [];

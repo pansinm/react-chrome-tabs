@@ -15,7 +15,7 @@ function App() {
   const [tabs, setTabs] = useState<TabProperties[]>([
     { id: "abc", favicon: fb, title: "测试", active: true },
   ]);
-
+  const [draggable, setDraggable] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
   const addTabWithIcon = () => {
@@ -86,6 +86,7 @@ function App() {
     <div>
       <Tabs
         darkMode={darkMode}
+        draggable={draggable}
         onTabClose={close}
         onTabReorder={reorder}
         onTabActive={active}
@@ -97,6 +98,12 @@ function App() {
       <button onClick={addTabWithoutClose}>Add Tab without close icon</button>
       <button onClick={closeAll}>Close All</button>
       <button onClick={toggleDarkMode}>Dark Mode</button>
+      <label> Draggable </label>
+      <input
+        type="checkbox"
+        checked={draggable}
+        onChange={(e) => setDraggable(e.target.checked)}
+      />
     </div>
   );
 }

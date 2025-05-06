@@ -6,7 +6,10 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import ChromeTabsClz, { TabProperties } from "../chrome-tabs";
+import ChromeTabsClz, {
+  ChromeTabsOptions,
+  TabProperties,
+} from "../chrome-tabs";
 import { useLatest } from "./useLatest";
 
 export type Listeners = {
@@ -20,7 +23,11 @@ export type Listeners = {
 
 const ChromeTabsWrapper = forwardRef<
   HTMLDivElement,
-  { className?: string; darkMode?: boolean; toolbar?: React.ReactNode }
+  {
+    className?: string;
+    darkMode?: boolean;
+    toolbar?: React.ReactNode;
+  }
 >((props, ref) => {
   const classList = ["chrome-tabs"];
   if (props.darkMode) {
@@ -49,20 +56,27 @@ const ChromeTabsWrapper = forwardRef<
   );
 });
 
-export function useChromeTabs(listeners: Listeners) {
+export function useChromeTabs(
+  listeners: Listeners,
+  options: ChromeTabsOptions = { draggable: true }
+) {
   const ref = useRef<HTMLDivElement>(null);
   const chromeTabsRef = useRef<ChromeTabsClz | null>(null);
 
   const listenersLest = useLatest(listeners);
 
   useEffect(() => {
-    const chromeTabs = new ChromeTabsClz();
+    const chromeTabs = new ChromeTabsClz(options);
     chromeTabsRef.current = chromeTabs;
     chromeTabs.init(ref.current as HTMLDivElement);
     return () => {
       chromeTabs.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    chromeTabsRef.current?.setDraggable(options.draggable ?? true);
+  }, [options.draggable]);
 
   // activated
   useEffect(() => {

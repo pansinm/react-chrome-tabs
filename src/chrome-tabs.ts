@@ -67,6 +67,10 @@ inRange;
 
 let instanceId = 0;
 
+export interface ChromeTabsOptions {
+  draggable?: boolean;
+}
+
 class ChromeTabs {
   el!: HTMLElement;
   styleEl!: HTMLStyleElement;
@@ -77,8 +81,19 @@ class ChromeTabs {
   isMouseEnter: boolean = false;
   mouseEnterLayoutResolve: null | (() => void) = null;
 
-  constructor() {
+  private draggable: boolean = true;
+  constructor({ draggable = true }: ChromeTabsOptions = {}) {
     this.draggabillies = [];
+    this.draggable = draggable;
+  }
+
+  setDraggable(draggable: boolean) {
+    this.draggable = draggable;
+    if (draggable) {
+      this.setupDraggabilly();
+    } else {
+      this.disposeDraggabilly();
+    }
   }
 
   init(el: HTMLElement) {
@@ -92,7 +107,7 @@ class ChromeTabs {
     this.setupStyleEl();
     this.setupEvents();
     this.layoutTabs();
-    this.setupDraggabilly();
+    this.setDraggable(this.draggable);
   }
 
   emit(eventName: string, data: any) {
@@ -332,6 +347,10 @@ class ChromeTabs {
     tabEl.oncontextmenu = (event) => {
       this.emit("contextmenu", { tabEl, event });
     };
+    tabEl.addEventListener("mousedown", () => {
+      console.log("-- tabCLick");
+      this.emit("tabClick", { tabEl });
+    });
     if (animate) {
       tabEl.classList.add("chrome-tab-was-just-added");
       setTimeout(
@@ -354,7 +373,7 @@ class ChromeTabs {
     if (!background) this.setCurrentTab(tabEl);
     this.cleanUpPreviouslyDraggedTabs();
     this.layoutTabs();
-    this.setupDraggabilly();
+    this.setDraggable(this.draggable);
     return tabEl;
   }
 
@@ -405,7 +424,7 @@ class ChromeTabs {
     } else {
       this.layoutTabs().then(() => this.translateToView());
     }
-    this.setupDraggabilly();
+    this.setDraggable(this.draggable);
   }
 
   updateTab(tabEl: HTMLElement, tabProperties: TabProperties) {
@@ -439,10 +458,7 @@ class ChromeTabs {
     );
   }
 
-  setupDraggabilly() {
-    const tabEls = this.tabEls;
-    const tabPositions = this.tabPositions;
-
+  disposeDraggabilly() {
     if (this.isDragging) {
       this.isDragging = false;
       this.el.classList.remove("chrome-tabs-is-sorting");
@@ -458,6 +474,14 @@ class ChromeTabs {
     }
 
     this.draggabillies.forEach((d) => d.destroy());
+    this.draggabillies = [];
+  }
+
+  setupDraggabilly() {
+    const tabEls = this.tabEls;
+    const tabPositions = this.tabPositions;
+
+    this.disposeDraggabilly();
 
     tabEls.forEach((tabEl: HTMLDivElement, originalIndex) => {
       const originalTabPositionX = tabPositions[originalIndex];
@@ -502,7 +526,7 @@ class ChromeTabs {
             requestAnimationFrame((_) => {
               tabEl.style.transform = "";
               this.layoutTabs();
-              this.setupDraggabilly();
+              this.setDraggable(this.draggable);
             });
           });
         });
