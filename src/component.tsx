@@ -45,7 +45,7 @@ export function Tabs({
     }
   );
 
-  const handleDragEnd = usePersistFn(() => {
+  const handleDragEnd = usePersistFn((tId) => {
     const { tabId, fromIndex, toIndex } = moveIndex.current;
     if (fromIndex > -1) {
       onTabReorder?.(tabId, fromIndex, toIndex);
@@ -55,7 +55,7 @@ export function Tabs({
       fromIndex: -1,
       toIndex: -1,
     };
-    onDragEnd?.();
+    onDragEnd?.(tId);
   });
 
   const {

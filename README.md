@@ -4,10 +4,27 @@
 
 [codesandbox]()
 
+A React component that mimics Chrome browser tabs with:
+
+- Smooth drag-and-drop reordering
+- Customizable favicons (image or CSS class)
+- Dark mode support
+- Responsive layout with dynamic tab sizing
+- Custom toolbar integration
+
 ## Installation
 
-> yarn add @sinm/react-chrome-tabs
+```bash
+yarn add @sinm/react-chrome-tabs
+```
+
+Required peer dependencies:
+- react@^16.8.0
+- react-dom@^16.8.0
+- draggabilly@^3.0.0
 ## Usage
+
+Basic setup:
 
 ```tsx
 import { Tabs, TabProperties } from "@sinm/react-chrome-tabs";
@@ -28,7 +45,9 @@ const [tabs, setTabs] = useState<TabProperties[]>([
 />
 ```
 
-## Example
+## Examples
+
+### Basic Usage
 
 ```tsx
 import React, { useEffect } from "react";
@@ -106,38 +125,69 @@ More Examples see
 
 ## Component Props
 
-| name          | type          | description                                                            |
-| ------------- | ------------- | ---------------------------------------------------------------------- |
-| darkMode      | boolean       | Enables or disables dark mode.                                         |
-| className     | string        | Custom class name for the tabs container.                              |
-| tabs          | TabProperties | Array of tab data to be rendered.                                      |
-| draggable     | boolean       | Determines whether tabs can be dragged for reordering，default true.   |  |
-| onTabActive   | Function      | Callback function triggered when a tab becomes active.                 |
-| onTabClose    | Function      | Callback function triggered when a tab is closed.                      |
-| onTabReorder  | Function      | Callback function triggered when tabs are reordered via drag-and-drop. |
-| onContextMenu | Function      | Callback function triggered when the context menu event is invoked.    |
-| onDragBegin   | Function      | Callback function triggered when tab dragging starts. No parameters.   |
-| onDragEnd     | Function      | Callback function triggered when tab dragging ends. No parameters.      |
+| Prop          | Type          | Description                                                                 | Default |
+| ------------- | ------------- | --------------------------------------------------------------------------- | ------- |
+| darkMode      | boolean       | Toggle dark mode theme                                                     | false   |
+| className     | string        | Additional CSS class for the container                                      | -       |
+| tabs          | TabProperties[] | Array of tab objects (required)                                           | -       |
+| draggable     | boolean       | Enable/disable drag-and-drop reordering                                    | true    |
+| onTabActive   | (id: string) => void | Called when a tab is activated                                         | -       |
+| onTabClose    | (id: string) => void | Called when a tab is closed                                            | -       |
+| onTabReorder  | (id: string, from: number, to: number) => void | Called after tab reorder completes                              | -       |
+| onContextMenu | (event: React.MouseEvent) => void | Called on right-click                                              | -       |
+| onDragBegin   | (id: string) => void | Called when drag starts                                                | -       |
+| onDragEnd     | (id: string) => void | Called when drag ends                                                  | -       |
+| pinnedRight   | React.ReactNode | Custom content to display on the right side of the tab bar              | -       |
 
 ## TabProperties
+
 ```ts
-export interface TabProperties {
-  id: string;
-  title: string;
-  active?: boolean;
-  // favicon background image
-  favicon?: boolean | string;
-  // favicon class
-  faviconClass?: string;
-  // default true
-  isCloseIconVisible?: boolean;
+interface TabProperties {
+  id: string;                   // Unique identifier (required)
+  title: string;                // Tab display text (required)
+  active?: boolean;             // Whether tab is active
+  favicon?: boolean | string;   // Favicon image URL or visibility flag
+  faviconClass?: string;        // CSS class for custom favicon styling
+  isCloseIconVisible?: boolean; // Show/hide close button
 }
 ```
 
-## Run Demo
-```bash
-git clone https://github.com/pansinm/react-chrome-tabs.git
-cd react-chrome-tabs
-yarn start
-# visit http://localhost:8080/
+### Favicon Examples:
+
+```ts
+// Image favicon
+{ id: 'tab1', title: 'Google', favicon: 'https://google.com/favicon.ico' }
+
+// CSS class favicon
+{ id: 'tab2', title: 'Emoji', faviconClass: 'emoji-icon' }
+
+// Hidden close button
+{ id: 'tab3', title: 'Pinned', isCloseIconVisible: false }
 ```
+
+## Development
+
+```bash
+# Install dependencies
+yarn
+
+# Start dev server
+yarn start
+# Open http://localhost:8080/
+
+# Build for production
+yarn build
+```
+
+### Custom Styling
+
+Override these CSS classes for custom styling:
+
+- `.chrome-tabs` - Main container
+- `.chrome-tab` - Individual tab
+- `.chrome-tab-active` - Active tab state
+- `.chrome-tab-favicon` - Favicon container
+- `.chrome-tab-title` - Title text
+- `.chrome-tab-close` - Close button
+
+Import `chrome-tabs-dark-theme.css` for dark mode support.

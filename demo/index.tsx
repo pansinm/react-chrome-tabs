@@ -82,12 +82,12 @@ function App() {
     setDarkMode((darkMode) => !darkMode);
   };
 
-  const handleDragBegin = () => {
-    console.log("drag begin");
+  const handleDragBegin = (tabId: string) => {
+    console.log("drag begin", tabId);
   };
 
-  const handleDragEnd = () => {
-    console.log("drag end");
+  const handleDragEnd = (tabId: string) => {
+    console.log("drag end", tabId);
   };
 
   return (
