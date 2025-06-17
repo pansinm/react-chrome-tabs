@@ -18,9 +18,12 @@ const [tabs, setTabs] = useState<TabProperties[]>([
 ]);
 
 <Tabs
+  draggable
   onTabClose={close}
   onTabReorder={reorder}
   onTabActive={active}
+  onDragBegin={() => console.log('Drag started')}
+  onDragEnd={() => console.log('Drag ended')}
   tabs={tabs}
 />
 ```
@@ -113,6 +116,8 @@ More Examples see
 | onTabClose    | Function      | Callback function triggered when a tab is closed.                      |
 | onTabReorder  | Function      | Callback function triggered when tabs are reordered via drag-and-drop. |
 | onContextMenu | Function      | Callback function triggered when the context menu event is invoked.    |
+| onDragBegin   | Function      | Callback function triggered when tab dragging starts. No parameters.   |
+| onDragEnd     | Function      | Callback function triggered when tab dragging ends. No parameters.      |
 
 ## TabProperties
 ```ts

@@ -21,6 +21,8 @@ export function Tabs({
   darkMode,
   onTabActive: onTabActive,
   onTabClose: onTabClose,
+  onDragBegin,
+  onDragEnd,
   onTabReorder,
   onContextMenu,
   pinnedRight: toolbar,
@@ -53,6 +55,7 @@ export function Tabs({
       fromIndex: -1,
       toIndex: -1,
     };
+    onDragEnd?.();
   });
 
   const {
@@ -69,6 +72,7 @@ export function Tabs({
       onContextMenu,
       onDragEnd: handleDragEnd,
       onTabReorder: handleTabReorder,
+      onDragBegin,
     },
     { draggable }
   );

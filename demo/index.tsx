@@ -82,11 +82,21 @@ function App() {
     setDarkMode((darkMode) => !darkMode);
   };
 
+  const handleDragBegin = () => {
+    console.log("drag begin");
+  };
+
+  const handleDragEnd = () => {
+    console.log("drag end");
+  };
+
   return (
     <div>
       <Tabs
         darkMode={darkMode}
         draggable={draggable}
+        onDragBegin={handleDragBegin}
+        onDragEnd={handleDragEnd}
         onTabClose={close}
         onTabReorder={reorder}
         onTabActive={active}

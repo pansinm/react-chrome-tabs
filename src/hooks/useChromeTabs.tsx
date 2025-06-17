@@ -160,6 +160,17 @@ export function useChromeTabs(
     };
   }, []);
 
+  useEffect(() => {
+    const listener = () => {
+      listenersLest.current.onDragBegin?.();
+    };
+    const ele = chromeTabsRef.current?.el;
+    ele?.addEventListener("dragStart", listener);
+    return () => {
+      ele?.removeEventListener("dragStart", listener);
+    };
+  }, []);
+
   const addTab = useCallback((tab: TabProperties) => {
     chromeTabsRef.current?.addTab(tab);
   }, []);
