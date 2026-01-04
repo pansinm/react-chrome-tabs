@@ -347,7 +347,12 @@ class ChromeTabs {
     tabEl.oncontextmenu = (event) => {
       this.emit("contextmenu", { tabEl, event });
     };
-    tabEl.addEventListener("mousedown", () => {
+    tabEl.addEventListener("mousedown", (e) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest(".chrome-tab-close")) {
+        return;
+      }
       this.emit("tabClick", { tabEl });
     });
     if (animate) {
