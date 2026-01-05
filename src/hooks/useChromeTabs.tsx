@@ -21,6 +21,13 @@ export type Listeners = {
   onContextMenu?: (tabId: string, event: MouseEvent) => void;
 };
 
+interface CustomEventDetail {
+  tabEl: HTMLDivElement;
+  originIndex?: number;
+  destinationIndex?: number;
+  event?: MouseEvent;
+}
+
 const ChromeTabsWrapper = forwardRef<
   HTMLDivElement,
   {
@@ -80,8 +87,9 @@ export function useChromeTabs(
 
   // activated
   useEffect(() => {
-    const listener = ({ detail }: any) => {
-      const tabEle = detail.tabEl as HTMLDivElement;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
+      const tabEle = detail.tabEl;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
       listenersLatest.current.onTabActive?.(tabId);
     };
@@ -94,13 +102,14 @@ export function useChromeTabs(
 
   useEffect(() => {
     const ele = chromeTabsRef.current?.el;
-    const listener = ({ detail }: any) => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
       const { tabEl: tabEle, originIndex, destinationIndex } = detail;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
       listenersLatest.current.onTabReorder?.(
         tabId,
-        originIndex,
-        destinationIndex
+        originIndex!,
+        destinationIndex!
       );
     };
     ele?.addEventListener("tabReorder", listener);
@@ -111,8 +120,9 @@ export function useChromeTabs(
 
   useEffect(() => {
     const ele = chromeTabsRef.current?.el;
-    const listener = ({ detail }: any) => {
-      const tabEle = detail.tabEl as HTMLDivElement;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
+      const tabEle = detail.tabEl;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
       listenersLatest.current.onTabClose?.(tabId);
     };
@@ -123,8 +133,9 @@ export function useChromeTabs(
   }, []);
 
   useEffect(() => {
-    const listener = ({ detail }: any) => {
-      const tabEle = detail.tabEl as HTMLDivElement;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
+      const tabEle = detail.tabEl;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
       listenersLatest.current.onDragBegin?.(tabId);
     };
@@ -137,13 +148,14 @@ export function useChromeTabs(
 
   useEffect(() => {
     const ele = chromeTabsRef.current?.el;
-    const listener = ({ detail }: any) => {
-      const tabEle = detail.tabEl as HTMLDivElement;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
+      const tabEle = detail.tabEl;
       if (!tabEle) {
         return;
       }
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLatest.current.onContextMenu?.(tabId, detail.event);
+      listenersLatest.current.onContextMenu?.(tabId, detail.event!);
     };
     ele?.addEventListener("contextmenu", listener);
     return () => {
@@ -152,8 +164,9 @@ export function useChromeTabs(
   }, []);
 
   useEffect(() => {
-    const listener = ({ detail }: any) => {
-      const tabEle = detail.tabEl as HTMLDivElement;
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<CustomEventDetail>).detail;
+      const tabEle = detail.tabEl;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
       listenersLatest.current.onDragEnd?.(tabId);
     };

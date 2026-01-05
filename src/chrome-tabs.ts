@@ -19,7 +19,7 @@ const TAB_SIZE_SMALL = 84;
 const TAB_SIZE_SMALLER = 60;
 const TAB_SIZE_MINI = 48;
 
-const noop = (_: any) => {};
+const noop = () => {};
 
 const closest = (value: number, array: number[]) => {
   let closest = Infinity;
@@ -75,8 +75,8 @@ class ChromeTabs {
   styleEl!: HTMLStyleElement;
   instanceId?: number;
   draggabillies: Draggabilly[];
-  isDragging: any;
-  draggabillyDragging: any;
+  isDragging!: boolean;
+  draggabillyDragging!: Draggabilly | null;
   isMouseEnter: boolean = false;
   mouseEnterLayoutResolve: null | (() => void) = null;
 
@@ -109,7 +109,7 @@ class ChromeTabs {
     this.setDraggable(this.draggable);
   }
 
-  emit(eventName: string, data: any) {
+  emit(eventName: string, data: unknown = {}) {
     this.el.dispatchEvent(new CustomEvent(eventName, { detail: data }));
   }
 
@@ -466,14 +466,13 @@ class ChromeTabs {
     if (this.isDragging) {
       this.isDragging = false;
       this.el.classList.remove("chrome-tabs-is-sorting");
-      this.draggabillyDragging.element.classList.remove(
-        "chrome-tab-is-dragging"
-      );
-      this.draggabillyDragging.element.style.transform = "";
-      this.draggabillyDragging.dragEnd();
-      this.draggabillyDragging.isDragging = false;
-      this.draggabillyDragging.positionDrag = noop; // Prevent Draggabilly from updating tabEl.style.transform in later frames
-      this.draggabillyDragging.destroy();
+      const dragging = this.draggabillyDragging as any;
+      dragging.element.classList.remove("chrome-tab-is-dragging");
+      dragging.element.style.transform = "";
+      dragging.dragEnd();
+      dragging.isDragging = false;
+      dragging.positionDrag = noop; // Prevent Draggabilly from updating tabEl.style.transform in later frames
+      this.draggabillyDragging!.destroy();
       this.draggabillyDragging = null;
     }
 
