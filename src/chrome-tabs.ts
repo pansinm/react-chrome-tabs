@@ -50,7 +50,7 @@ const tabTemplate = `
       </div>
     `;
 
-const defaultTapProperties = {
+const defaultTabProperties = {
   title: "New tab",
   favicon: false,
 };
@@ -63,7 +63,6 @@ export interface TabProperties {
   faviconClass?: string;
   isCloseIconVisible?: boolean;
 }
-inRange;
 
 let instanceId = 0;
 
@@ -363,7 +362,7 @@ class ChromeTabs {
       );
     }
 
-    tabProperties = Object.assign({}, defaultTapProperties, tabProperties);
+    tabProperties = Object.assign({}, defaultTabProperties, tabProperties);
     const showCloseButton = tabProperties.isCloseIconVisible !== false;
     if (!showCloseButton) {
       tabEl.classList.add("chrome-tab-no-close");
@@ -372,7 +371,7 @@ class ChromeTabs {
     }
     this.tabContentEl.appendChild(tabEl);
     this.setTabCloseEventListener(tabEl);
-    this.updateTab(tabEl, tabProperties);
+    this.updateTab(tabEl, tabProperties!);
     this.emit("tabAdd", { tabEl });
     if (!background) this.setCurrentTab(tabEl);
     this.cleanUpPreviouslyDraggedTabs();
@@ -442,8 +441,9 @@ class ChromeTabs {
       if (faviconClass) {
         faviconEl.className = ["chrome-tab-favicon", faviconClass].join(" ");
       }
-      if (favicon) {
-        faviconEl!.style!.backgroundImage = `url('${favicon}')`;
+      if (typeof favicon === 'string') {
+        const sanitizedUrl = favicon.replace(/['"]/g, '');
+        faviconEl!.style!.backgroundImage = `url('${sanitizedUrl}')`;
       }
       faviconEl?.removeAttribute("hidden");
     } else {

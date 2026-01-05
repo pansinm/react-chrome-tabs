@@ -15,7 +15,7 @@ import { useLatest } from "./useLatest";
 export type Listeners = {
   onTabActive?: (tabId: string) => void;
   onTabClose?: (tabId: string) => void;
-  onTabReorder?: (tabId: string, fromIdex: number, toIndex: number) => void;
+  onTabReorder?: (tabId: string, fromIndex: number, toIndex: number) => void;
   onDragBegin?: (tabId: string) => void;
   onDragEnd?: (tabId: string) => void;
   onContextMenu?: (tabId: string, event: MouseEvent) => void;
@@ -63,7 +63,7 @@ export function useChromeTabs(
   const ref = useRef<HTMLDivElement>(null);
   const chromeTabsRef = useRef<ChromeTabsClz | null>(null);
 
-  const listenersLest = useLatest(listeners);
+  const listenersLatest = useLatest(listeners);
 
   useEffect(() => {
     const chromeTabs = new ChromeTabsClz(options);
@@ -83,7 +83,7 @@ export function useChromeTabs(
     const listener = ({ detail }: any) => {
       const tabEle = detail.tabEl as HTMLDivElement;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onTabActive?.(tabId);
+      listenersLatest.current.onTabActive?.(tabId);
     };
     const ele = chromeTabsRef.current?.el;
     ele?.addEventListener("tabClick", listener);
@@ -97,7 +97,7 @@ export function useChromeTabs(
     const listener = ({ detail }: any) => {
       const { tabEl: tabEle, originIndex, destinationIndex } = detail;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onTabReorder?.(
+      listenersLatest.current.onTabReorder?.(
         tabId,
         originIndex,
         destinationIndex
@@ -114,7 +114,7 @@ export function useChromeTabs(
     const listener = ({ detail }: any) => {
       const tabEle = detail.tabEl as HTMLDivElement;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onTabClose?.(tabId);
+      listenersLatest.current.onTabClose?.(tabId);
     };
     ele?.addEventListener("tabClose", listener);
     return () => {
@@ -126,7 +126,7 @@ export function useChromeTabs(
     const listener = ({ detail }: any) => {
       const tabEle = detail.tabEl as HTMLDivElement;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onDragBegin?.(tabId);
+      listenersLatest.current.onDragBegin?.(tabId);
     };
     const ele = chromeTabsRef.current?.el;
     ele?.addEventListener("dragStart", listener);
@@ -143,7 +143,7 @@ export function useChromeTabs(
         return;
       }
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onContextMenu?.(tabId, detail.event);
+      listenersLatest.current.onContextMenu?.(tabId, detail.event);
     };
     ele?.addEventListener("contextmenu", listener);
     return () => {
@@ -155,7 +155,7 @@ export function useChromeTabs(
     const listener = ({ detail }: any) => {
       const tabEle = detail.tabEl as HTMLDivElement;
       const tabId = tabEle.getAttribute("data-tab-id") as string;
-      listenersLest.current.onDragEnd?.(tabId);
+      listenersLatest.current.onDragEnd?.(tabId);
     };
     const ele = chromeTabsRef.current?.el;
     ele?.addEventListener("dragEnd", listener);
